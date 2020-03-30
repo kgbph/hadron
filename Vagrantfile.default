@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrant configuration
+Vagrant.configure("2") do |config|
+
+  # Set base box
+  config.vm.box = "centos/7"
+
+  # Sync folder
+  config.vm.synced_folder "projects", "/home/vagrant/projects", type: "virtualbox"
+
+  # Configure forwarded ports
+  # config.vm.network "forwarded_port", guest: 80, host: 80
+  # config.vm.network "forwarded_port", guest: 443, host: 443
+
+  # Configure private network
+  config.vm.network "private_network", ip: "192.168.100.100"
+
+  # Configure public network
+  # config.vm.network "public_network", use_dhcp_assigned_default_route: true
+
+  # Define plugins
+  config.vagrant.plugins = [
+    "vagrant-hostsupdater",
+    "vagrant-vbguest"
+  ]
+
+  # Virtualbox configuration
+  config.vm.provider "virtualbox" do |vb|
+    # Disable audio
+    vb.customize ["modifyvm", :id, "--audio", "none"]
+  end
+
+  # Shell provisioner
+  config.vm.provision "shell",
+    path: "bin/provision"
+end
